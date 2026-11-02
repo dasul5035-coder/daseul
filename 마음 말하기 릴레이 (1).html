@@ -1,0 +1,547 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>마음 말하기 릴레이</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap">
+<style>
+/* Layout: 한 줄 카드 한 장씩 넘기는 스티커북. 역할 3색(A 코랑·B 민트·C 보라) + 도장 노랑/코랄 */
+:root {
+  --bg: #FFF3F2;
+  --surface: #FFFFFF;
+  --ink: #34213F;
+  --muted: #6E5A7E;
+  --line: #F0D9DD;
+  --edge: #34213F;
+  --a: #FF7A6B;
+  --a-tint: #FFE2DE;
+  --b: #2DBFA6;
+  --b-tint: #D6F4EE;
+  --c: #7080FF;
+  --c-tint: #E2E6FF;
+  --sun: #FFCB47;
+  --sun-tint: #FFF0BF;
+  --stamp: #E8453C;
+  --btn-ink: #2B1838;
+  --face-ink: #34213F;
+  --display: 'Jua', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  --body: 'Gowun Dodum', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1E1729; --surface: #2A2038; --ink: #F5EDFF; --muted: #BBA9D1; --line: #433557; --edge: #6B5589;
+    --a: #FF8A7C; --a-tint: #4A2B33; --b: #4CD1BA; --b-tint: #1F4440; --c: #9AA6FF; --c-tint: #2F3366;
+    --sun: #FFD25E; --sun-tint: #4A3D1B; --stamp: #FF7A6B;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1E1729; --surface: #2A2038; --ink: #F5EDFF; --muted: #BBA9D1; --line: #433557; --edge: #6B5589;
+  --a: #FF8A7C; --a-tint: #4A2B33; --b: #4CD1BA; --b-tint: #1F4440; --c: #9AA6FF; --c-tint: #2F3366;
+  --sun: #FFD25E; --sun-tint: #4A3D1B; --stamp: #FF7A6B;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.6;
+  padding-block: 18px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+h1, h2, h3, .display { font-family: var(--display); font-weight: 400; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--c); outline-offset: 3px; }
+
+/* header */
+.top { display: flex; flex-direction: column; gap: 10px; }
+.top-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.brand { font-family: var(--display); font-size: 26px; line-height: 1.2; }
+.brand small { display: block; font-family: var(--body); font-size: 13px; color: var(--muted); letter-spacing: .02em; }
+.link-btn { background: none; border: 2px solid var(--line); border-radius: 999px; padding: 6px 14px; cursor: pointer; color: var(--muted); min-height: 38px; }
+.link-btn:hover { border-color: var(--edge); color: var(--ink); }
+.rounds { display: flex; gap: 8px; flex-wrap: wrap; }
+.rd { font-family: var(--display); font-size: 14px; padding: 3px 12px; border-radius: 999px; border: 2px solid var(--line); color: var(--muted); background: var(--surface); }
+.rd.now { background: var(--sun); border-color: var(--edge); color: var(--btn-ink); }
+.rd.done { background: var(--b-tint); border-color: var(--b); color: var(--ink); }
+.bar { height: 14px; background: var(--surface); border: 2px solid var(--edge); border-radius: 999px; overflow: hidden; }
+.bar > i { display: block; height: 100%; background: repeating-linear-gradient(135deg, var(--a) 0 12px, var(--sun) 12px 24px); border-radius: 999px; transition: width .5s ease; }
+.bar-cap { font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; gap: 8px; }
+
+/* panels */
+.panel { background: var(--surface); border: 2px solid var(--line); border-radius: 24px; padding: 20px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.panel h2 { font-size: 24px; }
+.lead { color: var(--muted); }
+
+/* buttons */
+.btn { font-family: var(--display); font-size: 19px; background: var(--a); color: var(--btn-ink); border: 2px solid var(--edge); border-radius: 999px; padding: 10px 24px; min-height: 50px; cursor: pointer; box-shadow: 0 4px 0 var(--edge); transition: transform .08s, box-shadow .08s; }
+.btn:hover { transform: translateY(-1px); box-shadow: 0 5px 0 var(--edge); }
+.btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--edge); }
+.btn.alt { background: var(--surface); color: var(--ink); }
+.btn.sun { background: var(--sun); }
+.btn:disabled { opacity: .45; cursor: not-allowed; box-shadow: 0 2px 0 var(--edge); transform: none; }
+.actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.actions .grow { flex: 1; }
+
+/* intro */
+.roles3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.role { border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 6px; border: 2px solid var(--edge); min-width: 0; }
+.role.ra { background: var(--a-tint); } .role.rb { background: var(--b-tint); } .role.rc { background: var(--c-tint); }
+.badge { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-size: 22px; color: var(--btn-ink); border: 2px solid var(--edge); }
+.ra .badge { background: var(--a); } .rb .badge { background: var(--b); } .rc .badge { background: var(--c); }
+.role b { font-family: var(--display); font-weight: 400; font-size: 18px; }
+.role span { font-size: 14px; color: var(--muted); overflow-wrap: anywhere; }
+.phases { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; counter-reset: ph; }
+.phases li { counter-increment: ph; display: flex; gap: 12px; align-items: flex-start; }
+.phases li::before { content: counter(ph); flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--sun); border: 2px solid var(--edge); font-family: var(--display); color: var(--btn-ink); display: grid; place-items: center; }
+.phases b { font-family: var(--display); font-weight: 400; }
+.names { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.names label { display: flex; flex-direction: column; gap: 4px; font-size: 14px; color: var(--muted); }
+.names input { font: inherit; font-size: 16px; color: var(--ink); background: var(--bg); border: 2px solid var(--line); border-radius: 14px; padding: 10px 12px; width: 100%; min-width: 0; }
+.names input:focus { border-color: var(--c); outline: none; }
+
+/* play: roles strip */
+.strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.slot { border: 2px solid var(--edge); border-radius: 16px; padding: 8px 10px; display: flex; align-items: center; gap: 8px; min-width: 0; }
+.slot.ra { background: var(--a-tint); } .slot.rb { background: var(--b-tint); } .slot.rc { background: var(--c-tint); }
+.slot .badge { width: 30px; height: 30px; font-size: 17px; flex: none; }
+.slot .who { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+.slot .who b { font-family: var(--display); font-weight: 400; overflow-wrap: anywhere; }
+.slot .who small { font-size: 12px; color: var(--muted); }
+
+/* stepper */
+.steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.stp { text-align: center; font-family: var(--display); font-size: 15px; padding: 8px 4px; border-radius: 14px; border: 2px solid var(--line); background: var(--surface); color: var(--muted); }
+.stp.now { background: var(--sun); color: var(--btn-ink); border-color: var(--edge); }
+.stp.ok { background: var(--b-tint); color: var(--ink); border-color: var(--b); }
+
+.banner { background: var(--sun-tint); border: 2px dashed var(--edge); border-radius: 16px; padding: 10px 14px; }
+.banner b { font-family: var(--display); font-weight: 400; }
+
+/* step 1 cards */
+.draws { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.draw { border: 3px dashed var(--edge); border-radius: 22px; min-height: 190px; padding: 14px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 10px; cursor: pointer; width: 100%; min-width: 0; }
+.draw.s { background: var(--a-tint); } .draw.e { background: var(--sun-tint); }
+.draw.got { border-style: solid; }
+.draw .tag { font-size: 13px; letter-spacing: .06em; color: var(--muted); }
+.draw .txt { font-family: var(--display); font-size: 20px; line-height: 1.4; overflow-wrap: anywhere; text-wrap: balance; }
+.draw .q { font-family: var(--display); font-size: 44px; line-height: 1; color: var(--edge); opacity: .55; }
+.draw .hint { font-size: 13px; color: var(--muted); }
+.fresh { animation: pop .45s cubic-bezier(.2, .9, .3, 1.3); }
+@keyframes pop { 0% { transform: rotateY(90deg) scale(.85); opacity: 0; } 100% { transform: none; opacity: 1; } }
+
+/* step 2 */
+.targets { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+.tg { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 2px solid var(--line); border-radius: 18px; padding: 10px 12px; cursor: pointer; text-align: left; min-height: 58px; min-width: 0; }
+.tg:hover { border-color: var(--edge); }
+.tg .av { flex: none; width: 38px; height: 38px; border-radius: 50%; background: var(--c-tint); border: 2px solid var(--edge); display: grid; place-items: center; font-family: var(--display); font-size: 13px; letter-spacing: -.03em; }
+.grp { display: flex; flex-direction: column; gap: 8px; }
+.grp h3 { font-size: 15px; color: var(--muted); }
+.custom { display: flex; gap: 10px; flex-wrap: wrap; }
+.custom input { flex: 1; min-width: 160px; font: inherit; font-size: 16px; color: var(--ink); background: var(--bg); border: 2px solid var(--line); border-radius: 14px; padding: 10px 14px; }
+.custom input:focus { border-color: var(--c); outline: none; }
+.tg b { font-family: var(--display); font-weight: 400; font-size: 17px; overflow-wrap: anywhere; }
+.tg[aria-pressed="true"] { background: var(--b-tint); border-color: var(--b); box-shadow: 0 0 0 3px var(--b) inset; }
+.tg[aria-pressed="true"] .av { background: var(--b); color: var(--btn-ink); }
+.bubble { position: relative; background: var(--b-tint); border: 2px solid var(--edge); border-radius: 20px; padding: 14px 16px; font-family: var(--display); font-size: 21px; }
+.bubble small { display: block; font-family: var(--body); font-size: 13px; color: var(--muted); margin-bottom: 2px; }
+
+/* step 3 */
+.sentence { font-family: var(--display); font-size: 22px; line-height: 2.1; overflow-wrap: anywhere; background: var(--bg); border: 2px solid var(--line); border-radius: 20px; padding: 14px 16px; }
+.seg { padding: 3px 8px; border-radius: 10px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.s1 { background: var(--a-tint); box-shadow: inset 0 -3px 0 var(--a); }
+.s2 { background: var(--sun-tint); box-shadow: inset 0 -3px 0 var(--sun); }
+.s3 { background: var(--b-tint); box-shadow: inset 0 -3px 0 var(--b); }
+.s4 { background: var(--c-tint); box-shadow: inset 0 -3px 0 var(--c); }
+.seg-toggle { display: inline-flex; border: 2px solid var(--edge); border-radius: 999px; overflow: hidden; align-self: flex-start; }
+.seg-toggle button { background: var(--surface); border: 0; padding: 6px 16px; cursor: pointer; font-family: var(--display); min-height: 38px; }
+.seg-toggle button[aria-pressed="true"] { background: var(--sun); color: var(--btn-ink); }
+.mentor { background: var(--c-tint); border: 2px solid var(--edge); border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.mentor h3 { font-size: 18px; }
+.chk { display: flex; align-items: center; gap: 10px; min-height: 40px; cursor: pointer; }
+.chk input { width: 22px; height: 22px; accent-color: var(--c); flex: none; }
+.dot { width: 12px; height: 12px; border-radius: 50%; flex: none; border: 2px solid var(--edge); }
+.d1 { background: var(--a); } .d2 { background: var(--sun); } .d3 { background: var(--b); } .d4 { background: var(--c); }
+.praise { font-family: var(--display); font-size: 18px; color: var(--ink); background: var(--b-tint); border: 2px solid var(--b); border-radius: 16px; padding: 8px 14px; }
+
+/* stamp */
+.stamp-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.stamp { width: 132px; height: 132px; color: var(--stamp); transform: rotate(-10deg); flex: none; animation: stampin .55s cubic-bezier(.2, .9, .3, 1.2); }
+@keyframes stampin { 0% { transform: scale(2.4) rotate(-32deg); opacity: 0; } 60% { transform: scale(.92) rotate(-8deg); opacity: 1; } 100% { transform: scale(1) rotate(-10deg); } }
+.stamp-row .msg { flex: 1; min-width: 180px; display: flex; flex-direction: column; gap: 4px; }
+.replies { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; }
+.reply { background: var(--b-tint); border: 2px solid var(--b); border-radius: 16px; padding: 8px 12px; font-size: 15px; }
+
+/* done */
+.mini { display: flex; gap: 14px; align-items: center; border: 2px solid var(--line); border-radius: 18px; padding: 12px; min-width: 0; }
+.mini .stamp { width: 72px; height: 72px; animation: none; }
+.mini p { font-size: 15px; overflow-wrap: anywhere; }
+.mini small { color: var(--muted); }
+.final { text-align: center; align-items: center; }
+.final .stamp { width: 160px; height: 160px; }
+
+@media (max-width: 480px) {
+  .roles3, .names { grid-template-columns: 1fr; }
+  .sentence { font-size: 20px; }
+  .slot { padding: 6px 8px; }
+  .slot .badge { width: 26px; height: 26px; font-size: 15px; }
+  .draw .txt { font-size: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fresh, .stamp { animation: none; }
+  .bar > i, .btn { transition: none; }
+}
+</style>
+
+<div class="wrap" id="app"></div>
+
+<script>
+(function () {
+  var SITUATIONS = [
+    '모둠 과제에서 {내} 의견이 안 받아들여져서',
+    '시험을 망친 것 같아서',
+    '친구와 다퉈서',
+    '숙제가 너무 많아서 감당이 안 돼서',
+    '같이 놀 친구가 없어서',
+    '발표해야 하는데 너무 떨려서',
+    '친구가 {내} 물건을 허락 없이 써서',
+    '친구들에게 놀림을 받아서',
+    '학원 공부가 너무 힘들어서',
+    '잘하고 싶은데 자꾸 잘 안 돼서',
+    '실수를 해서 창피해서',
+    '수학여행 방 정하는 게 걱정돼서'
+  ];
+  var EMOTIONS = [
+    { w: '답답해', past: '답답했겠다', mouth: 'flat', brow: 'angry' },
+    { w: '속상해', past: '속상했겠다', mouth: 'sad', brow: 'worry' },
+    { w: '불안해', past: '불안했겠다', mouth: 'wavy', brow: 'worry' },
+    { w: '슬퍼', past: '슬펐겠다', mouth: 'sad', brow: 'worry', tear: true },
+    { w: '외로워', past: '외로웠겠다', mouth: 'sad' },
+    { w: '창피해', past: '창피했겠다', mouth: 'smile', blush: true },
+    { w: '무서워', past: '무서웠겠다', mouth: 'open', brow: 'worry' },
+    { w: '억울해', past: '억울했겠다', mouth: 'sad', brow: 'angry' },
+    { w: '막막해', past: '막막했겠다', mouth: 'flat', brow: 'worry' },
+    { w: '걱정돼', past: '걱정됐겠다', mouth: 'wavy' }
+  ];
+  var TARGETS = [
+    { id: 'mom', group: '가족', name: '엄마', call: '엄마,', is: '엄마야', polite: false, av: '엄마' },
+    { id: 'dad', group: '가족', name: '아빠', call: '아빠,', is: '아빠야', polite: false, av: '아빠' },
+    { id: 'teacher', group: '학교와 병원', name: '담임 선생님', call: '담임 선생님,', is: '담임 선생님이야', polite: true, av: '담임' },
+    { id: 'counselor', group: '학교와 병원', name: '상담 선생님', call: '상담 선생님,', is: '상담 선생님이야', polite: true, av: '상담' },
+    { id: 'doctor', group: '학교와 병원', name: '의사 선생님', call: '의사 선생님,', is: '의사 선생님이야', polite: true, av: '의사' },
+    { id: 'friend', group: '친구', name: '친구', call: '친구야,', is: '친구야', polite: false, av: '친구' }
+  ];
+  var GROUPS = ['가족', '학교와 병원', '친구'];
+  var STEP_NAMES = ['카드 뽑기', '대상 지정', '말하기 연습'];
+  var ROLE_LABEL = { A: '요청자', B: '조력자', C: '관찰자' };
+  var CHECKS = ['상대를 불렀어요', '지금 상황을 말했어요', '내 마음을 말했어요', '도와달라고 말했어요'];
+
+  var DEFAULT_NAMES = ['1번 친구', '2번 친구', '3번 친구'];
+  var st = newState('intro', DEFAULT_NAMES.slice());
+
+  function newState(view, names) {
+    return {
+      view: view, names: names, round: 0, step: 1,
+      situ: null, emo: null, target: null, polite: true,
+      checks: [false, false, false, false], stamped: false,
+      done: [], fresh: [], confirmHome: false, customName: '', customDraft: ''
+    };
+  }
+  function resetRound() {
+    st.step = 1; st.situ = null; st.emo = null; st.target = null; st.polite = true;
+    st.checks = [false, false, false, false]; st.stamped = false;
+  }
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function nm(i) { return esc((st.names[i] || '').trim() || DEFAULT_NAMES[i]); }
+  function who(round) { return { A: round % 3, B: (round + 1) % 3, C: (round + 2) % 3 }; }
+  function pick(arr, cur) { var n; do { n = arr[Math.floor(Math.random() * arr.length)]; } while (arr.length > 1 && n === cur); return n; }
+  function josa(n) { var c = n.charCodeAt(n.length - 1); return (c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28 !== 0) ? '이야' : '야'; }
+  function customTarget() { var n = st.customName; return { id: 'custom', name: n, call: n + ',', is: n + josa(n), polite: false, av: '직접' }; }
+  function tgt() {
+    if (st.target === 'custom') return customTarget();
+    return TARGETS.filter(function (t) { return t.id === st.target; })[0];
+  }
+  function customBlock() {
+    var chip = st.customName
+      ? '<div class="targets"><button class="tg" data-act="target" data-id="custom" aria-pressed="' + (st.target === 'custom') + '"><span class="av">직접</span><b>' + esc(st.customName) + '</b></button></div>'
+      : '';
+    return '<div class="grp"><h3>직접 쓰기</h3><div class="custom">' +
+      '<input id="customName" type="text" maxlength="10" placeholder="예: 할머니, 이모, 형" value="' + esc(st.customDraft) + '" autocomplete="off" aria-label="말할 사람 직접 쓰기">' +
+      '<button class="btn alt" data-act="custom">정하기</button></div>' + chip + '</div>';
+  }
+
+  function situText(polite) { return SITUATIONS[st.situ].replace(/\{내\}/g, polite ? '제' : '내'); }
+  function segments() {
+    var t = tgt(), e = EMOTIONS[st.emo], p = st.polite;
+    return [
+      t.call,
+      (p ? '제가 지금 ' : '나 지금 ') + situText(p),
+      '마음이 너무 ' + e.w + (p ? '요.' : '.'),
+      p ? '도와주세요.' : '도와줄래?'
+    ];
+  }
+
+  function face(e) {
+    var ink = 'var(--face-ink)';
+    var mouths = {
+      flat: '<path d="M22 39h16"/>',
+      sad: '<path d="M21 41q9-9 18 0"/>',
+      wavy: '<path d="M20 39q5-5 10 0t10 0"/>',
+      smile: '<path d="M24 37q6 5 12 0"/>',
+      open: '<ellipse cx="30" cy="40" rx="4.5" ry="5.5" fill="' + ink + '"/>'
+    };
+    var brows = '';
+    if (e.brow === 'worry') brows = '<path d="M16 22l9-4M35 18l9 4"/>';
+    if (e.brow === 'angry') brows = '<path d="M16 18l9 4M35 22l9-4"/>';
+    return '<svg width="58" height="58" viewBox="0 0 60 60" aria-hidden="true">' +
+      '<circle cx="30" cy="30" r="27" fill="var(--sun)" stroke="var(--edge)" stroke-width="2.5"/>' +
+      (e.blush ? '<circle cx="15" cy="36" r="4" fill="#FF8FA3" opacity=".7"/><circle cx="45" cy="36" r="4" fill="#FF8FA3" opacity=".7"/>' : '') +
+      '<g fill="none" stroke="' + ink + '" stroke-width="2.6" stroke-linecap="round">' + brows + mouths[e.mouth] + '</g>' +
+      '<circle cx="22" cy="29" r="2.8" fill="' + ink + '"/><circle cx="38" cy="29" r="2.8" fill="' + ink + '"/>' +
+      (e.tear ? '<path d="M22 34q-3 5 0 7 3-2 0-7z" fill="#7CC4FF"/>' : '') +
+      '</svg>';
+  }
+
+  function stampSvg() {
+    return '<svg class="stamp" viewBox="0 0 160 160" role="img" aria-label="도움 요청 성공 도장">' +
+      '<circle cx="80" cy="80" r="72" fill="none" stroke="currentColor" stroke-width="7"/>' +
+      '<circle cx="80" cy="80" r="61" fill="none" stroke="currentColor" stroke-width="2.5" stroke-dasharray="3 5"/>' +
+      '<path d="M80 22l5 11 12 1-9 8 3 12-11-6-11 6 3-12-9-8 12-1z" fill="currentColor"/>' +
+      '<text x="80" y="88" text-anchor="middle" font-family="Jua, sans-serif" font-size="26" fill="currentColor">도움 요청</text>' +
+      '<text x="80" y="122" text-anchor="middle" font-family="Jua, sans-serif" font-size="34" fill="currentColor">성공!</text>' +
+      '</svg>';
+  }
+
+  function progress() {
+    var units = st.round * 3 + (st.step - 1) + (st.stamped ? 1 : 0);
+    if (st.view === 'done') units = 9;
+    if (st.view === 'intro') units = 0;
+    return Math.round(units / 9 * 100);
+  }
+
+  function header() {
+    var pct = progress();
+    var dots = '';
+    for (var i = 0; i < 3; i++) {
+      var cls = 'rd';
+      if (st.view === 'done' || i < st.round) cls += ' done';
+      else if (st.view === 'play' && i === st.round) cls += ' now';
+      dots += '<span class="' + cls + '">' + (i + 1) + '라운드</span>';
+    }
+    var home = st.view === 'intro' ? '' :
+      '<button class="link-btn" data-act="home">' + (st.confirmHome ? '정말 처음으로 갈까요?' : '처음으로') + '</button>';
+    return '<header class="top">' +
+      '<div class="top-row"><div class="brand">마음 말하기 릴레이<small>3명이 돌아가며 연습하는 도움 요청 역할극</small></div>' + home + '</div>' +
+      '<div class="rounds">' + dots + '</div>' +
+      '<div class="bar" role="progressbar" aria-label="전체 진행" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><i style="width:' + pct + '%"></i></div>' +
+      '<div class="bar-cap"><span>' + (st.view === 'play' ? STEP_NAMES[st.step - 1] + ' 중' : st.view === 'done' ? '모두 끝났어요' : '시작 전') + '</span><span>' + pct + '%</span></div>' +
+      '</header>';
+  }
+
+  function introView() {
+    return '<section class="panel">' +
+      '<h2>세 명이 한 조, 세 번 돌아가요</h2>' +
+      '<p class="lead">힘들 때 어른이나 친구에게 도움을 요청하는 말을 소리 내어 연습해요. 한 번 할 때마다 역할이 바뀌어서 모두가 요청자가 돼요.</p>' +
+      '<div class="roles3">' +
+      '<div class="role ra"><div class="badge">A</div><b>요청자</b><span>스트레스를 받는 학생</span></div>' +
+      '<div class="role rb"><div class="badge">B</div><b>조력자</b><span>엄마, 담임 선생님, 친구 등 정해진 대상</span></div>' +
+      '<div class="role rc"><div class="badge">C</div><b>관찰자</b><span>문장 카드를 들고 조언해 주는 멘토</span></div>' +
+      '</div>' +
+      '<ol class="phases">' +
+      '<li><div><b>카드 뽑기</b><br><span class="lead">A가 상황 카드와 감정 카드를 한 장씩 뽑아요.</span></div></li>' +
+      '<li><div><b>대상 지정</b><br><span class="lead">A가 B에게 “너는 오늘 담임 선생님이야!”처럼 역할을 줘요.</span></div></li>' +
+      '<li><div><b>말하기 연습</b><br><span class="lead">A가 문장 틀에 맞춰 말하고, C가 확인한 뒤 도장을 찍어 줘요.</span></div></li>' +
+      '</ol>' +
+      '</section>' +
+      '<section class="panel"><h2>우리 조 이름</h2>' +
+      '<div class="names">' +
+      [0, 1, 2].map(function (i) {
+        return '<label for="name' + i + '">' + (i + 1) + '번' +
+          '<input id="name' + i + '" type="text" maxlength="8" value="' + esc(st.names[i]) + '" data-name="' + i + '" autocomplete="off"></label>';
+      }).join('') +
+      '</div>' +
+      '<div class="actions"><button class="btn" data-act="start">시작하기</button></div>' +
+      '</section>';
+  }
+
+  function roleStrip() {
+    var w = who(st.round), t = st.target ? tgt() : null;
+    function slot(k, cls) {
+      var sub = ROLE_LABEL[k] + (k === 'B' && t ? ' · ' + esc(t.name) + ' 역' : '');
+      return '<div class="slot ' + cls + '"><div class="badge">' + k + '</div><div class="who"><b>' + nm(w[k]) + '</b><small>' + sub + '</small></div></div>';
+    }
+    return '<div class="strip">' + slot('A', 'ra') + slot('B', 'rb') + slot('C', 'rc') + '</div>';
+  }
+
+  function stepper() {
+    return '<div class="steps">' + STEP_NAMES.map(function (n, i) {
+      var cls = 'stp';
+      var num = i + 1;
+      if (num < st.step || (num === 3 && st.stamped)) cls += ' ok';
+      else if (num === st.step) cls += ' now';
+      return '<div class="' + cls + '">' + num + '. ' + n + '</div>';
+    }).join('') + '</div>';
+  }
+
+  function step1() {
+    var w = who(st.round);
+    var f = st.fresh;
+    var sCard = st.situ === null
+      ? '<button class="draw s" data-act="drawSitu" aria-label="상황 카드 뽑기"><span class="tag">상황 카드</span><span class="q">?</span><span class="hint">눌러서 뽑기</span></button>'
+      : '<button class="draw s got' + (f.indexOf('s') > -1 ? ' fresh' : '') + '" data-act="drawSitu" aria-label="상황 카드 다시 뽑기"><span class="tag">상황 카드</span><span class="txt">' + esc(situText(true)) + '</span><span class="hint">눌러서 다시 뽑기</span></button>';
+    var eCard = st.emo === null
+      ? '<button class="draw e" data-act="drawEmo" aria-label="감정 카드 뽑기"><span class="tag">감정 카드</span><span class="q">?</span><span class="hint">눌러서 뽑기</span></button>'
+      : '<button class="draw e got' + (f.indexOf('e') > -1 ? ' fresh' : '') + '" data-act="drawEmo" aria-label="감정 카드 다시 뽑기"><span class="tag">감정 카드</span>' + face(EMOTIONS[st.emo]) + '<span class="txt">' + esc(EMOTIONS[st.emo].w) + '</span><span class="hint">눌러서 다시 뽑기</span></button>';
+    var ready = st.situ !== null && st.emo !== null;
+    return '<h2>카드를 뽑아요</h2>' +
+      '<p class="lead"><b>' + nm(w.A) + '</b>(A)가 오늘 연습할 상황과 마음을 뽑아요. 마음에 안 들면 카드를 눌러 다시 뽑아도 돼요.</p>' +
+      '<div class="draws">' + sCard + eCard + '</div>' +
+      (ready ? '<div class="praise" role="status">좋아요! 오늘의 마음 카드가 정해졌어요.</div>' : '') +
+      '<div class="actions"><button class="btn alt" data-act="drawBoth">' + (ready ? '둘 다 다시 뽑기' : '둘 다 뽑기') + '</button>' +
+      '<span class="grow"></span><button class="btn" data-act="next"' + (ready ? '' : ' disabled') + '>다음 →</button></div>';
+  }
+
+  function step2() {
+    var w = who(st.round), t = st.target ? tgt() : null;
+    return '<h2>누구에게 말할까요?</h2>' +
+      '<p class="lead"><b>' + nm(w.A) + '</b>(A)가 <b>' + nm(w.B) + '</b>(B)에게 역할을 줘요. 오늘 B는 누구일까요?</p>' +
+      GROUPS.map(function (g) {
+        return '<div class="grp"><h3>' + g + '</h3><div class="targets">' + TARGETS.filter(function (x) { return x.group === g; }).map(function (x) {
+          return '<button class="tg" data-act="target" data-id="' + x.id + '" aria-pressed="' + (x.id === st.target) + '"><span class="av">' + x.av + '</span><b>' + x.name + '</b></button>';
+        }).join('') + '</div></div>';
+      }).join('') +
+      customBlock() +
+      (t ? '<div class="bubble"><small>' + nm(w.A) + '(A)가 ' + nm(w.B) + '(B)에게</small>“너는 오늘 ' + esc(t.is) + '!”</div>' +
+        '<div class="praise" role="status">멋져요! 이제 직접 말해 볼 차례예요.</div>' : '') +
+      '<div class="actions"><button class="btn alt" data-act="prev">← 이전</button><span class="grow"></span>' +
+      '<button class="btn" data-act="next"' + (t ? '' : ' disabled') + '>다음 →</button></div>';
+  }
+
+  function step3() {
+    var w = who(st.round), t = tgt(), e = EMOTIONS[st.emo], segs = segments();
+    var all = st.checks.every(Boolean);
+    var sentence = '<div class="sentence" aria-label="연습 문장">' +
+      segs.map(function (s, i) { return '<span class="seg s' + (i + 1) + '">' + esc(s) + '</span>'; }).join(' ') + '</div>';
+    var tog = '<div class="seg-toggle" role="group" aria-label="말투 고르기">' +
+      '<button data-act="polite" data-v="1" aria-pressed="' + st.polite + '">존댓말</button>' +
+      '<button data-act="polite" data-v="0" aria-pressed="' + !st.polite + '">반말</button></div>';
+    var mentor = '<div class="mentor"><h3>' + nm(w.C) + '(C) 멘토 확인표</h3>' +
+      '<p class="lead">A가 말하는 걸 듣고, 말한 부분에 체크해 주세요.</p>' +
+      CHECKS.map(function (c, i) {
+        return '<label class="chk" for="chk' + i + '"><input type="checkbox" id="chk' + i + '" data-act="check" data-i="' + i + '"' + (st.checks[i] ? ' checked' : '') + (st.stamped ? ' disabled' : '') + '><span class="dot d' + (i + 1) + '"></span><span>' + c + '</span></label>';
+      }).join('') + '</div>';
+    var out = '<h2>소리 내어 말해 봐요</h2>' +
+      '<p class="lead"><b>' + nm(w.A) + '</b>(A)가 <b>' + nm(w.B) + '</b>(B, ' + esc(t.name) + ' 역)에게 아래 문장을 말해요. 내 이야기에 맞게 말을 바꿔도 좋아요.</p>' +
+      tog + sentence + mentor;
+    if (all && !st.stamped) out += '<div class="praise" role="status">와, 네 가지를 모두 말했어요!</div>';
+    if (st.stamped) {
+      var last = st.round === 2;
+      out += '<div class="stamp-row">' + stampSvg() +
+        '<div class="msg"><h3>도움 요청 성공!</h3><p class="lead">' + nm(w.A) + ', 용기 내서 말해 줘서 고마워요.</p></div></div>' +
+        '<div class="mentor" style="background:var(--b-tint)"><h3>' + nm(w.B) + '(B)는 이렇게 답해 줄 수 있어요</h3><div class="replies">' +
+        ['말해 줘서 고마워.', '많이 ' + e.past + '.', '어떤 일인지 더 들려줄래?', '같이 방법을 찾아보자.'].map(function (r) { return '<div class="reply">' + esc(r) + '</div>'; }).join('') +
+        '</div></div>' +
+        '<div class="actions"><span class="grow"></span><button class="btn sun" data-act="nextRound">' + (last ? '결과 보기' : '역할 바꾸기 →') + '</button></div>';
+    } else {
+      out += '<div class="actions"><button class="btn alt" data-act="prev">← 이전</button><span class="grow"></span>' +
+        '<button class="btn sun" data-act="stamp"' + (all ? '' : ' disabled') + '>도장 찍기</button></div>';
+    }
+    return out;
+  }
+
+  function playView() {
+    var w = who(st.round);
+    var banner = st.step === 1 && st.round > 0
+      ? '<div class="banner"><b>역할이 바뀌었어요!</b> 이번에는 ' + nm(w.A) + '가 요청자(A), ' + nm(w.B) + '가 조력자(B), ' + nm(w.C) + '가 관찰자(C)예요.</div>' : '';
+    var body = st.step === 1 ? step1() : st.step === 2 ? step2() : step3();
+    return roleStrip() + stepper() + banner + '<section class="panel">' + body + '</section>';
+  }
+
+  function doneView() {
+    var items = st.done.map(function (d, i) {
+      return '<div class="mini">' + stampSvg() + '<div><p><b>' + (i + 1) + '라운드</b> · ' + esc(d.a) + ' → ' + esc(d.b) + '</p><p>' + esc(d.sentence) + '</p></div></div>';
+    }).join('');
+    return '<section class="panel final">' + stampSvg() +
+      '<h2>세 번 모두 성공!</h2>' +
+      '<p class="lead">세 사람 모두 도움을 요청해 봤어요. 진짜로 힘든 일이 생기면 오늘처럼 믿는 어른이나 친구에게 말해 보세요.</p></section>' +
+      '<section class="panel"><h2>우리가 말한 문장</h2>' + items +
+      '<div class="actions"><button class="btn" data-act="again">같은 조로 한 번 더</button><button class="btn alt" data-act="restart">조 새로 만들기</button></div></section>';
+  }
+
+  function render() {
+    var activeId = document.activeElement && document.activeElement.id;
+    var html = header();
+    html += st.view === 'intro' ? introView() : st.view === 'play' ? playView() : doneView();
+    document.getElementById('app').innerHTML = html;
+    st.fresh = [];
+    if (activeId) { var el = document.getElementById(activeId); if (el) el.focus(); }
+  }
+
+  function act(a, d) {
+    if (a !== 'home') st.confirmHome = false;
+    switch (a) {
+      case 'start': st.view = 'play'; st.round = 0; st.done = []; resetRound(); break;
+      case 'drawSitu': st.situ = pick(SITUATIONS.map(function (_, i) { return i; }), st.situ); st.fresh = ['s']; break;
+      case 'drawEmo': st.emo = pick(EMOTIONS.map(function (_, i) { return i; }), st.emo); st.fresh = ['e']; break;
+      case 'drawBoth':
+        st.situ = pick(SITUATIONS.map(function (_, i) { return i; }), st.situ);
+        st.emo = pick(EMOTIONS.map(function (_, i) { return i; }), st.emo);
+        st.fresh = ['s', 'e']; break;
+      case 'target': st.target = d.id; st.polite = tgt().polite; break;
+      case 'custom':
+        var v = (st.customDraft || '').trim();
+        if (!v) return;
+        st.customName = v; st.target = 'custom'; st.polite = false; break;
+      case 'polite': st.polite = d.v === '1'; break;
+      case 'check': st.checks[+d.i] = !st.checks[+d.i]; break;
+      case 'stamp':
+        if (!st.checks.every(Boolean)) return;
+        st.stamped = true;
+        var w = who(st.round);
+        st.done.push({ a: (st.names[w.A] || '').trim() || DEFAULT_NAMES[w.A], b: (st.names[w.B] || '').trim() || DEFAULT_NAMES[w.B], sentence: segments().join(' ') });
+        break;
+      case 'next': st.step = Math.min(3, st.step + 1); break;
+      case 'prev': st.step = Math.max(1, st.step - 1); break;
+      case 'nextRound':
+        if (st.round === 2) { st.view = 'done'; } else { st.round++; resetRound(); }
+        break;
+      case 'again': st.view = 'play'; st.round = 0; st.done = []; resetRound(); break;
+      case 'restart': st = newState('intro', st.names); break;
+      case 'home':
+        if (st.confirmHome) { st = newState('intro', st.names); } else { st.confirmHome = true; }
+        break;
+    }
+    render();
+    window.scrollTo({ top: 0 });
+  }
+
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-act]');
+    if (!b || b.disabled) return;
+    act(b.getAttribute('data-act'), b.dataset);
+  });
+  document.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t && t.matches && t.matches('input[type="checkbox"][data-act="check"]')) {
+      st.checks[+t.dataset.i] = t.checked;
+      var keep = document.activeElement && document.activeElement.id;
+      render();
+      if (keep) { var el = document.getElementById(keep); if (el) el.focus(); }
+    }
+  });
+  document.addEventListener('input', function (e) {
+    var t = e.target;
+    if (t && t.dataset && t.dataset.name !== undefined) st.names[+t.dataset.name] = t.value;
+    if (t && t.id === 'customName') st.customDraft = t.value;
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && e.target && e.target.id === 'customName') { e.preventDefault(); act('custom', {}); }
+  });
+
+  render();
+})();
+</script>
+
+</body></html>
